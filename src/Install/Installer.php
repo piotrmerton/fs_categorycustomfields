@@ -83,10 +83,20 @@ class Installer
      */
     private function registerHooks(Module $module): bool
     {
-        
+
+        /**
+         * These hooks are available for [CRUD forms] (https://devdocs.prestashop.com/1.7/modules/sample-modules/grid-and-identifiable-object-form-hooks-usage/, https://github.com/PrestaShop/example-modules/blob/master/demoextendsymfonyform1/demoextendsymfonyform1.php) in PrestaShop Symfony pages.
+         */
+
+        // Register hook to allow overriding Category form
+        // this structure: "action{block_prefix}FormBuilderModifier", in this case "block_prefix" is "Category"
+        // {block_prefix} is either retrieved automatically by its type. E.g "ManufacturerType" will be "manufacturer"
+        // or it can be modified in form type by overriding "getBlockPrefix" function
+
         $hooks = [
-            'actionAdminCategoriesFormModifier', //this hook is absent on above hooks list, but it is equivalent of actionSupplierFormBuilderModifier that is used in sample code; also it is used in this french source: https://www.h-hennes.fr/blog/2017/06/21/prestashop-ajouter-des-champs-dans-un-formulaire-dadministration/ 
-            'actionAdminCategoriesControllerSaveAfter', //absent as well?
+            'actionCategoryFormBuilderModifier', //this hook is on above hooks list, but it is equivalent of actionSupplierFormBuilderModifier and actionCustomerFormBuilderModifier that are used in sample modules; also it is used in this french source: https://www.h-hennes.fr/blog/2017/06/21/prestashop-ajouter-des-champs-dans-un-formulaire-dadministration/, and in this sample https://stackoverflow.com/q/57552868 
+            'actionAfterCreateCategoryFormHandler',
+            'actionAfterUpdateCategoryFormHandler'
         ];
 
         return (bool) $module->registerHook($hooks);

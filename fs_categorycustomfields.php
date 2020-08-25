@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 // use statements
 use PrestaShop\Module\Fs_CategoryCustomFields\Install\Installer;
+use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
+
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -72,6 +76,89 @@ class Fs_CategoryCustomFields extends Module
         return $installer->uninstall() && parent::uninstall();
 
     }
+
+    /**
+     * Adding new field to Category form based on devdoc tutorial
+     * source: https://devdocs.prestashop.com/1.7/modules/sample-modules/grid-and-identifiable-object-form-hooks-usage/#adding-new-form-field-to-customer-form
+     * 
+     * @param array $params
+     */
+    public function hookActionCategoryFormBuilderModifier(array $params) {
+
+        $id_category = $params['id'];
+        $translator = $this->getTranslator();
+
+        /** 
+         * formBuilder Symfony object
+         * https://devdocs.prestashop.com/1.7/development/components/form/types-reference/
+         * https://devdocs.prestashop.com/1.7/development/components/form/types-reference/translatable/
+         * https://devdocs.prestashop.com/1.7/development/components/form/types-reference/formatted-textarea/
+         * https://symfony.com/doc/current/forms.html
+         * 
+         * @var FormBuilderInterface $formBuilder 
+         * 
+         * */
+        $formBuilder = $params['form_builder'];
+        $formBuilder
+            ->add('extra_desc', FormattedTextareaType::class, [
+                'label' => $translator->trans('Extra description for SEO', [], 'Modules.Fs_CategoryCustomFields'),
+                'required' => false,
+            ]);
+        /**
+         * TO DO: make texarea translatable - TranslateType is implied to use alongside FormattedTextareaType, but undocumented as of 25-08;
+         * source: https://devdocs.prestashop.com/1.7/development/components/form/types-reference/translatable/
+         */
+            
+        $params['data']['extra_desc'] = $this->getCategoryExtraData($id_category);
+
+        $formBuilder->setData($params['data']);
+
+
+    }
+
+
+    private function getCategoryExtraData($id_category) {
+
+        $category = new Category( $id_category, $this->context->language->id );
+        return $category->extra_desc;
+    }
+
+    /**
+     * Hook allows to modify Category form and add additional form fields as well as modify or add new data to the forms.
+     * @param array $params
+     */    
+    public function hookActionAfterCreateCategoryFormHandler(array $params)
+    {
+        $this->updateCategoryData($params);
+    }
+
+    /**
+     * Hook allows to modify Category form and add additional form fields as well as modify or add new data to the forms.
+     * @param array $params
+     */    
+    public function hookActionAfterUpdateCategoryFormHandler(array $params)
+    {
+        $this->updateCategoryData($params);
+    }
+
+
+    protected function updateCategoryData($params)
+    {
+        /** based on https://github.com/wfpaisa/prestashop-custom-field/blob/master/ps_customercedula.php */
+        
+        $categoryFormData = $params['form_data'];
+
+        try {
+
+            $category = new Category((int)$params['id']);
+            $category->extra_desc = $categoryFormData['extra_desc'];
+            $category->update();
+
+        } catch (Exception $exception) {
+            throw new \PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException($exception);
+        }        
+
+    }    
 
 
 }
