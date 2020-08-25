@@ -17,4 +17,5 @@ Bare bones basic module boilerplate for creating and removing extra Database col
 
 ## Resources:
  * https://devdocs.prestashop.com/1.7/modules/creation/
- * https://devdocs.prestashop.com/1.7/modules/sample-modules/extending-sf-form-with-upload-image-field/
+ * https://github.com/PrestaShop/example-modules/tree/master/demoextendsymfonyform1 - extending back office Symfony forms
+ * https://devdocs.prestashop.com/1.7/modules/sample-modules/extending-sf-form-with-upload-image-field/ - overall structure and Installer class

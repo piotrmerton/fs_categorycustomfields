@@ -144,7 +144,9 @@ class Fs_CategoryCustomFields extends Module
 
     protected function updateCategoryData($params)
     {
-        /** based on https://github.com/wfpaisa/prestashop-custom-field/blob/master/ps_customercedula.php */
+        /** based on demo module and similar extension of Customer Object:
+         * https://github.com/PrestaShop/example-modules/tree/master/demoextendsymfonyform1
+         * https://github.com/wfpaisa/prestashop-custom-field/blob/master/ps_customercedula.php */
         
         $categoryFormData = $params['form_data'];
 
