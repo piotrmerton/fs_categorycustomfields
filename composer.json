@@ -1,12 +1,6 @@
 
 {
-  "name": "prestashop/demoextendsymfonyform2",
-  "authors": [
-    {
-      "name": "Tadas Davidsonas",
-      "email": "tadas.davidsonas@invertus.eu"
-    }
-  ],
+  "name": "prestashop/fs_categorycustomfields",
   "autoload": {
     "psr-4": {
       "PrestaShop\\Module\\Fs_CategoryCustomFields\\": "src/"
