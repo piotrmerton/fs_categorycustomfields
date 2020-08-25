@@ -58,13 +58,6 @@ class Installer
     private function installDatabase(): bool
     {
 
-        // $queries = [
-
-        //     'ALTER TABLE `'._DB_PREFIX_.'category_lang`
-        //         ADD `extra_desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `meta_description`;',
-                
-        // ];
-
         return $this->executeQueries(SqlQueries::installQueries());
 
     }
@@ -76,10 +69,6 @@ class Installer
      */
     private function uninstallDatabase(): bool
     {
-
-        // $queries = [
-        //     'ALTER TABLE `'._DB_PREFIX_.'category_lang` DROP `extra_desc`;',
-        // ];
 
         return $this->executeQueries(SqlQueries::uninstallQueries());
     }
