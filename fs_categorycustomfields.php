@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  module's main class file
+ *  Modules's main Class file
  *  based on tutorial https://devdocs.prestashop.com/1.7/modules/sample-modules/extending-sf-form-with-upload-image-field/#main-module-class
  *  file source: https://github.com/PrestaShop/example-modules/blob/master/demoextendsymfonyform2/demoextendsymfonyform2.php
  */
@@ -16,8 +16,6 @@ use PrestaShop\Module\Fs_CategoryCustomFields\Install\Installer;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
-
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -25,7 +23,7 @@ if (!defined('_PS_VERSION_')) {
 require_once __DIR__.'/vendor/autoload.php';
 
 /**
- * Class demoextendsymfonyform
+ * Class Fs_CategoryCustomFields
  */
 class Fs_CategoryCustomFields extends Module
 {
@@ -37,17 +35,14 @@ class Fs_CategoryCustomFields extends Module
         $this->author = 'Piotr Merton';
         $this->need_instance = 0;
         $this->version = '0.0.1';
-        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.7.6', 'max' => _PS_VERSION_];
         $this->bootstrap = true;
 
         parent::__construct();
 
-        $this->displayName = $this->l('Category custom fields');
-        $this->description = $this->l(
-            'Demonstration of how to add an image upload field inside the Symfony form'
-        );
-
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+        $this->displayName = $this->getTranslator()->trans('Category custom fields', array(), 'Modules.CategoryCustomFields.Admin');
+        $this->description = $this->getTranslator()->trans('Adds extra field to Category for SEO purposes.', array(), 'Modules.CategoryCustomFields.Admin');
+        $this->confirmUninstall = $this->getTranslator()->trans('Are you sure you want to uninstall? Uninstalling will also remove data from Database.', array(), 'Modules.CategoryCustomFields.Admin');
 
     }
 
@@ -70,11 +65,8 @@ class Fs_CategoryCustomFields extends Module
      */
     public function uninstall()
     {
-
-
         $installer = new Installer();
         return $installer->uninstall() && parent::uninstall();
-
     }
 
     /**
@@ -113,12 +105,13 @@ class Fs_CategoryCustomFields extends Module
 
         $formBuilder->setData($params['data']);
 
-
     }
 
 
-    private function getCategoryExtraData($id_category) {
-
+    /**
+     * Retrieve current category data to populate form
+     */
+    private function getCategoryExtraData(int $id_category) {
         $category = new Category( $id_category, $this->context->language->id );
         return $category->extra_desc;
     }
@@ -141,8 +134,10 @@ class Fs_CategoryCustomFields extends Module
         $this->updateCategoryData($params);
     }
 
-
-    protected function updateCategoryData($params)
+    /**
+     * Update Database with form data
+     */
+    protected function updateCategoryData(array $params)
     {
         /** based on demo module and similar extension of Customer Object:
          * https://github.com/PrestaShop/example-modules/tree/master/demoextendsymfonyform1

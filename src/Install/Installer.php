@@ -57,9 +57,7 @@ class Installer
      */
     private function installDatabase(): bool
     {
-
         return $this->executeQueries(SqlQueries::installQueries());
-
     }
 
     /**
@@ -69,7 +67,6 @@ class Installer
      */
     private function uninstallDatabase(): bool
     {
-
         return $this->executeQueries(SqlQueries::uninstallQueries());
     }
 
